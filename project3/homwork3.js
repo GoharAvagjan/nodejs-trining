@@ -17,7 +17,7 @@
  */
 console.log('---------task1-------');
 const random = require('random')
-const http = require('http');
+
 const promise1 = new Promise(function(resolve, reject){
     let randomInt = random.int(0, 10);
     if(randomInt > 5){
@@ -32,9 +32,27 @@ promise1.then(value => {
     console.log(value); // Success!
 }).catch(err => console.log(err));
 
+// Sargisi tarberaky
+function check(){
+    return new Promise(function(resolve, reject ){
+        let randomNumber = random.int(0, 10);
+        if(randomNumber < 5 ){
+           reject(new Error('Number is less then 5'));
+        } else{
+            resolve(randomNumber);
+        }
+    });
+}
+check().then((number) => {
+    console.log(number);
+}).catch((err) => {
+    console.log(err.message);
+});
+
 console.log('-----------task2 --------');
 
 const fs = require('fs');
+const http = require('http');
 const data = fs.readFileSync('config.json');
 const jsonData = JSON.parse(data);
 // console.log(jsonData.host);
@@ -45,6 +63,22 @@ const jsonData = JSON.parse(data);
 //    res.write('Hello World!');
 //    res.end();
 //  }).listen(jsonData.port);
+
+//Sargisi tarberaky
+let fs = require('fs');
+let http = require('http');
+const fs = require('fs/promises');
+const http = require('http');
+
+const server = http.createServer(function (req, res) {
+    res.end(JSON.stringify({name: 'Sargis'}));
+});
+fs.readFile('./config.json').then((configBuffer) => {
+    const config = JSON.parse(configBuffer.toString());
+    server.listen(config.port, config.host);
+}).catch((err) => {
+    console.log(err);
+});
 
 console.log("------------- task3-------------");
 /*3․ Ստեծել ֆունկցիա , որը input.txt ֆայլի պարունակությունը կկարդա ,
@@ -74,4 +108,15 @@ async function f() {
     });
 }
 f();
+
+//Sargisi tarberaky
+async function readInput() {
+    const data = await fs.readFile('./input.txt', 'utf-8');
+    await Promise.all([
+        fs.writeFile('output1.txt', data.slice(0, data.length / 2)),
+        fs.writeFile('output2.txt', data.slice(data.length / 2))
+    ]);
+}
+
+readInput().then().catch();
 
